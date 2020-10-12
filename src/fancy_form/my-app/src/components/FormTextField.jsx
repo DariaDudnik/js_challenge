@@ -25,9 +25,8 @@ const FormTextField = (props) => {
   const fieldStyles = useFieldStyles();
 
   return (<TextField
-    value={props.value}
-    className={fieldStyles.root}
     value={value}
+    className={fieldStyles.root}
     onChange={(e) => setValue(e.target.value)}
     InputLabelProps={{
       shrink: true,
@@ -39,6 +38,7 @@ const FormTextField = (props) => {
     label={props.label}
     type={props.type}
     placeholder={props.placeholder}
+    disabled={props.disabled}
   />);
 }
 

@@ -1,7 +1,6 @@
-import { Grid } from '@material-ui/core';
 import React from 'react';
 import './App.css';
-import { FormPage } from "./pages/form-page";
+import { FormPage } from "./pages/FormPage";
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({

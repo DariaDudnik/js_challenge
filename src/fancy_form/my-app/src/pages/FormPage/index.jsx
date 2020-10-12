@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
 import { Grid } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import MuiAlert from '@material-ui/lab/Alert';
 import { useStyles } from './styles';
 import FormTextField from '../../components/FormTextField';
-import Button from '@material-ui/core/Button';
+import { validators } from '../../utils';
+import { sendBitcoin } from '../../services/SendBitcoin';
+
+
+const formStates = {
+  INITIAL: 0,
+  PROGRESS: 1,
+  COMPLETE: 2,
+};
+
+const buttonCaptions = [
+  'Submit',
+  'Please wait...',
+  'Back',
+];
+
 
 export const FormPage = () => {
   const styles = useStyles();
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [otp, setOtp] = useState('');
+  const [formState, setFormState] = useState(formStates.INITIAL);
 
   const [addressErrorText, setAddressErrorText] = useState();
   const [amountErrorText, setAmountErrorText] = useState();
   const [otpErrorText, setOTPErrorText] = useState();
 
-  const handleSubmit = () => {
-    const addressValidation = validateBCAddress(address);
-    const amountValidation = validateAmount(amount);
-    const otpValidation = validateOTP(otp);
+  const pay = async () => {
+    const addressValidation = validators.bitcoinAddress(address);
+    const amountValidation = validators.positiveFloat(amount);
+    const otpValidation = validators.otp(otp);
 
     setAddressErrorText(addressValidation);
     setAmountErrorText(amountValidation);
@@ -27,7 +45,24 @@ export const FormPage = () => {
       return;
     }
 
-    alert('Sending to BTC!!');
+    setFormState(formStates.PROGRESS);
+    try {
+      await sendBitcoin(address, amount, otp);
+      setFormState(formStates.COMPLETE);
+    } catch (ex) {
+      setFormState(formStates.INITIAL);
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (formState === formStates.INITIAL) {
+      pay();
+    } else if (formState === formStates.COMPLETE) {
+      setAddress('');
+      setAmount('');
+      setOtp('');
+      setFormState(formStates.INITIAL);
+    }
   }
 
   return (
@@ -51,6 +86,7 @@ export const FormPage = () => {
             label="Bitcoin Address"
             placeholder="16q4PinynazaMYfv24juNLkbjkDQxJo2dc"
             errorText={addressErrorText}
+            disabled={formState !== formStates.INITIAL}
           />
         </Grid>
         <Grid item>
@@ -62,6 +98,7 @@ export const FormPage = () => {
             type="number"
             placeholder="0.0000"
             errorText={amountErrorText}
+            disabled={formState !== formStates.INITIAL}
           />
         </Grid>
         <Grid item>
@@ -72,6 +109,7 @@ export const FormPage = () => {
             label="OTP Authentication"
             placeholder="SMS OTP"
             errorText={otpErrorText}
+            disabled={formState !== formStates.INITIAL}
           />
         </Grid>
         <Grid item>
@@ -79,12 +117,25 @@ export const FormPage = () => {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            disabled={formState === formStates.PROGRESS}
           >
-            Submit
+            {buttonCaptions[formState]}
           </Button>
         </Grid>
+        {formState === formStates.COMPLETE && (
+          <Grid item>
+            <MuiAlert
+              severity="success"
+              elevation={6}
+              variant="filled"
+            >
+              Your transfer is successfull
+            </MuiAlert>
+          </Grid>)
+        }
       </Grid>
     </Grid>
   );
 }
+
 
