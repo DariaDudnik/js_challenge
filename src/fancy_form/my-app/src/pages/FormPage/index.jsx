@@ -7,7 +7,6 @@ import FormTextField from '../../components/FormTextField';
 import { validators } from '../../utils';
 import { sendBitcoin } from '../../services/SendBitcoin';
 
-
 const formStates = {
   INITIAL: 0,
   PROGRESS: 1,
@@ -28,9 +27,9 @@ export const FormPage = () => {
   const [otp, setOtp] = useState('');
   const [formState, setFormState] = useState(formStates.INITIAL);
 
-  const [addressErrorText, setAddressErrorText] = useState();
-  const [amountErrorText, setAmountErrorText] = useState();
-  const [otpErrorText, setOTPErrorText] = useState();
+  const [addressErrorText, setAddressErrorText] = useState(null);
+  const [amountErrorText, setAmountErrorText] = useState(null);
+  const [otpErrorText, setOTPErrorText] = useState(null);
 
   const pay = async () => {
     const addressValidation = validators.bitcoinAddress(address);
@@ -54,9 +53,9 @@ export const FormPage = () => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (formState === formStates.INITIAL) {
-      pay();
+      return pay();
     } else if (formState === formStates.COMPLETE) {
       setAddress('');
       setAmount('');

@@ -14,3 +14,11 @@ You are required to provide solutions for 3 problems specified below:
 ## Submission ##
 You can either provide a link to a online repository, attach the solution in your application, or whichever method you prefer.   
 We're cool as long as we can view your solution without any pain.
+
+## To check fancy_form execute following steps
+
+```
+cd src/fancy_form/my-app
+npm install
+npm run start
+```
