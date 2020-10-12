@@ -32,11 +32,11 @@ class Datasource {
     return fetch(this.pricesEndpoint)
       .then(data => data.json())
       .then((response) => {
-        return Datasource.transformPrices(response.data.prices)
+        return Datasource.wrapPrices(response.data.prices)
       });
   }
 
-  static transformPrices(prices) {
+  static wrapPrices(prices) {
     return prices.map(priceData => new Price(priceData));
   }
 }
@@ -44,8 +44,8 @@ class Datasource {
 function test() {
   const source = new Datasource();
   source.getPrices()
-    .then((kekembers) => {
-      kekembers.forEach(price => {
+    .then((prices) => {
+      prices.forEach(price => {
         console.log(`Mid price for ${ price.pair } is ${ price.mid() } ${ price.quote() }.`);
     });
   });
