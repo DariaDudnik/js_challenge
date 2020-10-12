@@ -4,5 +4,7 @@
 // Output: `return` - summation to `n`, i.e. sum_to_n(5) === 1 + 2 + 3 + 4 + 5 === 15.
 
 var sum_to_n = function(n) {
-    // your code here
+    return (BigInt(n) + BigInt(n)**BigInt(2)) / BigInt(2);
 };
+
+console.log(sum_to_n(6));
