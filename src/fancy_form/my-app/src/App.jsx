@@ -18,7 +18,7 @@ function App() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root} >
+    <div className={classes.root}>
       <FormPage />
     </div>
   );
